@@ -6,13 +6,13 @@ public class Main {
         String searchTerm = " hermit ";
 
         
-        for (int i = 1; i <= 20; i++) {
-            ShakespeareSearch search = new ShakespeareSearch(resourceName, searchTerm, i);
+        for (int numThreads = 1; numThreads <= 20; numThreads++) {
+            ShakespeareSearch search = new ShakespeareSearch(resourceName, searchTerm, numThreads);
             long startTime = System.nanoTime();
             int matches = search.search();
             long endTime = System.nanoTime();
             long duration = (endTime - startTime) / 1000000;
-            System.out.println("Thread count: " + i + ".  Time taken: " + duration + " ms.  Avg: " + duration/matches);
+            System.out.println("Thread count: " + numThreads + ".  Time taken: " + duration + " ms.  Avg: " + duration/matches);
         }
         
 
