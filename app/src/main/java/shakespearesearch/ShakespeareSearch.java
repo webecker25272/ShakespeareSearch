@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class ShakespeareSearch {
-    private static final int CHUNK_SIZE = 1000;
-    private static String resourceName;
+    private static final int CHUNK_SIZE = 1000; //should this be set to an intelligent number?
+    private static String resourceName; //should probably load some text into a PG database and try to optimize retrieval?
     private static String searchTerm;
     private static int numThreads;
 
