@@ -12,12 +12,19 @@ import java.util.stream.Collectors;
 
 public class ShakespeareSearch {
     private static final int CHUNK_SIZE = 1000;
-    private static final int NUM_THREADS = 4;
+    private static String resourceName;
+    private static String searchTerm;
+    private static int numThreads;
 
-    public static void main(String[] args) throws InterruptedException {
-        String resourceName = "/shakespeare.txt"; // eventually needs to be a PG database or dynamodb or s3?
-        String searchTerm = "romeo";
 
+    public ShakespeareSearch(String resourceName, String searchTerm, int numThreads) {
+        ShakespeareSearch.resourceName = resourceName;
+        ShakespeareSearch.searchTerm = searchTerm;
+        ShakespeareSearch.numThreads = numThreads;
+
+    }
+
+    public void search() throws InterruptedException {
         try {
             List<Chunk> chunks = readChunksFromResource(resourceName);
 
@@ -49,7 +56,7 @@ public class ShakespeareSearch {
     private static List<Match> searchChunks(List<Chunk> chunks, String searchTerm) throws InterruptedException {
         List<Match> matches = new ArrayList<>();
 
-        ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 
         for (int i = 0; i < chunks.size(); i++) {
             Chunk chunk = chunks.get(i);
