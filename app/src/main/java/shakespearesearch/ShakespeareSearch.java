@@ -15,8 +15,8 @@ public class ShakespeareSearch {
     private static final int NUM_THREADS = 4;
 
     public static void main(String[] args) throws InterruptedException {
-        String resourceName = "/shakespeare.txt";
-        String searchTerm = "example phrase";
+        String resourceName = "/shakespeare.txt"; // eventually needs to be a PG database or dynamodb or s3?
+        String searchTerm = "romeo";
 
         try {
             List<Chunk> chunks = readChunksFromResource(resourceName);
@@ -27,13 +27,13 @@ public class ShakespeareSearch {
                 System.out.println("Match found on line " + (match.getLineNumber() + 1) + ": " + match.getLine());
             }
         } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
         }
     }
 
     private static List<Chunk> readChunksFromResource(String resourceName) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                ShakespeareSearch.class.getResourceAsStream(resourceName)))) {
+        InputStreamReader isr = new InputStreamReader(ShakespeareSearch.class.getResourceAsStream(resourceName));
+        try (BufferedReader reader = new BufferedReader(isr)) {
             List<String> lines = reader.lines().collect(Collectors.toList());
 
             List<Chunk> chunks = new ArrayList<>();
@@ -53,16 +53,15 @@ public class ShakespeareSearch {
 
         for (int i = 0; i < chunks.size(); i++) {
             Chunk chunk = chunks.get(i);
-            executor.submit(() -> searchChunk(chunk, searchTerm, matches));
+            executor.submit(() -> searchChunk(chunk, searchTerm, matches)); 
         }
 
         executor.shutdown();
         try {
             executor.awaitTermination(10, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
-            System.err.println("Error waiting for threads to finish: " + e.getMessage());
+            System.err.println("Hanging threads. " + e.getMessage()); // which thread?
         }
-        
 
         return matches;
     }
