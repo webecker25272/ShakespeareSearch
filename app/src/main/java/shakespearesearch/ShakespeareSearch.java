@@ -8,84 +8,68 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class ShakespeareSearch {
     private static final int CHUNK_SIZE = 1000;
+    private static final int NUM_THREADS = 4;
 
-    private final String fileName;
-    private final String searchTerm;
-    private final int numThreads;
+    public static void main(String[] args) {
+        String resourceName = "/shakespeare.txt";
+        String searchTerm = "example phrase";
 
-    public ShakespeareSearch(String fileName, String searchTerm, int numThreads) {
-        this.fileName = fileName;
-        this.searchTerm = searchTerm;
-        this.numThreads = numThreads;
+        try {
+            List<Chunk> chunks = readChunksFromResource(resourceName);
+
+            List<Match> matches = searchChunks(chunks, searchTerm);
+
+            for (Match match : matches) {
+                System.out.println("Match found on line " + (match.getLineNumber() + 1) + ": " + match.getLine());
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+        }
     }
 
-    public List<Match> search() throws IOException, InterruptedException {
-        List<String> lines = readLinesFromFile(fileName);
-        List<List<String>> chunks = splitIntoChunks(lines, CHUNK_SIZE);
+    private static List<Chunk> readChunksFromResource(String resourceName) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                ShakespeareSearch.class.getResourceAsStream(resourceName)))) {
+            List<String> lines = reader.lines().collect(Collectors.toList());
 
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+            List<Chunk> chunks = new ArrayList<>();
+            for (int i = 0; i < lines.size(); i += CHUNK_SIZE) {
+                List<String> chunkLines = lines.subList(i, Math.min(i + CHUNK_SIZE, lines.size()));
+                chunks.add(new Chunk(chunkLines, i));
+            }
 
-        List<Match> matches = new ArrayList<>();
-        for (int i = 0; i < chunks.size(); i++) {
-            List<String> chunk = chunks.get(i);
-            final int offset = i * CHUNK_SIZE;
-            executor.submit(() -> searchChunk(chunk, offset, matches));
+            return chunks;
         }
-        
+    }
+
+    private static List<Match> searchChunks(List<Chunk> chunks, String searchTerm) throws InterruptedException {
+        List<Match> matches = new ArrayList<>();
+
+        ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
+
+        for (int i = 0; i < chunks.size(); i++) {
+            Chunk chunk = chunks.get(i);
+            executor.submit(() -> searchChunk(chunk, searchTerm, matches));
+        }
+
         executor.shutdown();
-        executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        executor.awaitTermination(1, TimeUnit.HOURS);
 
         return matches;
     }
 
-    private List<String> readLinesFromFile(String fileName) throws IOException {
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(fileName)))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-        }
-        return lines;
-    }
-
-    private List<List<String>> splitIntoChunks(List<String> lines, int chunkSize) {
-        List<List<String>> chunks = new ArrayList<>();
-        for (int i = 0; i < lines.size(); i += chunkSize) {
-            int toIndex = Math.min(i + chunkSize, lines.size());
-            chunks.add(lines.subList(i, toIndex));
-        }
-        return chunks;
-    }
-
-    private void searchChunk(List<String> lines, int offset, List<Match> matches) {
-        for (int i = 0; i < lines.size(); i++) {
-            String line = lines.get(i);
+    private static void searchChunk(Chunk chunk, String searchTerm, List<Match> matches) {
+        int startIndex = chunk.getStartIndex();
+        for (int i = 0; i < chunk.getLines().size(); i++) {
+            String line = chunk.getLines().get(i);
             if (line.contains(searchTerm)) {
-                int lineNumber = offset + i + 1;
+                int lineNumber = startIndex + i;
                 matches.add(new Match(lineNumber, line));
             }
-        }
-    }
-
-    public static class Match {
-        private final int lineNumber;
-        private final String lineText;
-
-        public Match(int lineNumber, String lineText) {
-            this.lineNumber = lineNumber;
-            this.lineText = lineText;
-        }
-
-        public int getLineNumber() {
-            return lineNumber;
-        }
-
-        public String getLineText() {
-            return lineText;
         }
     }
 }
