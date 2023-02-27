@@ -23,7 +23,7 @@ public class ShakespeareSearch {
 
     }
 
-    public int search() throws InterruptedException {
+    public int search() throws InterruptedException { //should return a matches object that can be serialized into a table
         try {
             List<Chunk> chunks = readChunksFromResource(resourceName);
 
@@ -33,7 +33,7 @@ public class ShakespeareSearch {
             List<Match> matches = searchChunks(chunks, searchTerm);
 
             // for (Match match : matches) {
-            //     want to catch the actual matched sequence so i can bold it in the fe
+            //     // want to catch the actual matched sequence so i can bold it in the fe
             //     System.out.println("Match found on line " + (match.getLineNumber() + 1) + ": " + match.getLine());
             // }
             return matches.size();
