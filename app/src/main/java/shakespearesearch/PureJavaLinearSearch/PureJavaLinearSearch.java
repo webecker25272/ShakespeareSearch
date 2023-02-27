@@ -16,6 +16,7 @@ public class Search {
     private static String searchTerm;
     private static int numThreads;
 
+    //need to create an Algo class that has getAlgoName() and search() or run()
     public Search(String resourceName, String searchTerm, int numThreads) {
         Search.resourceName = resourceName;
         Search.searchTerm = searchTerm.toLowerCase();
@@ -23,6 +24,10 @@ public class Search {
 
     }
 
+    public String getAlgoName() {
+        return "Pure Java Linear Search";
+    }
+    
     public int search() throws InterruptedException { //should return a matches object that can be serialized into a table
         try {
             List<Chunk> chunks = readChunksFromResource(resourceName);

@@ -16,6 +16,3 @@ public class Main {
         }
     }
 }
-
-
-//test cases: no matches, a billion matches, null search term, illegal search term
