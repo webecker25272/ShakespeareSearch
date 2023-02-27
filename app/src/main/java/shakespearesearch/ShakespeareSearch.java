@@ -14,7 +14,7 @@ public class ShakespeareSearch {
     private static final int CHUNK_SIZE = 1000;
     private static final int NUM_THREADS = 4;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         String resourceName = "/shakespeare.txt";
         String searchTerm = "example phrase";
 
@@ -57,7 +57,12 @@ public class ShakespeareSearch {
         }
 
         executor.shutdown();
-        executor.awaitTermination(1, TimeUnit.HOURS);
+        try {
+            executor.awaitTermination(10, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            System.err.println("Error waiting for threads to finish: " + e.getMessage());
+        }
+        
 
         return matches;
     }
