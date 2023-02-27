@@ -24,7 +24,7 @@ public class ShakespeareSearch {
 
     }
 
-    public void search() throws InterruptedException {
+    public List<Match> search() throws InterruptedException {
         try {
             List<Chunk> chunks = readChunksFromResource(resourceName);
 
@@ -33,9 +33,11 @@ public class ShakespeareSearch {
             for (Match match : matches) {
                 System.out.println("Match found on line " + (match.getLineNumber() + 1) + ": " + match.getLine());
             }
+            return matches;
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         }
+        return null;
     }
 
     private static List<Chunk> readChunksFromResource(String resourceName) throws IOException {
