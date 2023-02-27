@@ -2,7 +2,7 @@ package shakespearesearch;
 
 import java.util.List;
 
-public class SearchTask implements Runnable {
+public class SearchTask {
         private Chunk chunk;
         private String searchTerm;
         private List<Match> matches;
@@ -13,7 +13,7 @@ public class SearchTask implements Runnable {
             this.matches = matches;
         }
     
-        public void run() {
+        public void search() {
             //write this
         }
     }
