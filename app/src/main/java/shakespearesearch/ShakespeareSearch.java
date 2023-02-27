@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 public class ShakespeareSearch {
     private static final int CHUNK_SIZE = 1000; // should this be set to an intelligent number?
     private static String resourceName; // should probably load some text into a PG database and try to optimize
-                                        // retrieval?
     private static String searchTerm;
     private static int numThreads;
 
@@ -80,9 +79,8 @@ public class ShakespeareSearch {
         try {
             executor.awaitTermination(10, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
-            System.err.println("Hanging threads. " + e.getMessage()); // which thread?
+            System.err.println("Hanging threads.." + e.getMessage()); // which thread?
         }
-
         return matches;
     }
 

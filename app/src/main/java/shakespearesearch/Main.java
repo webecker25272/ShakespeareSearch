@@ -5,8 +5,8 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         String resourceName = "/shakespeare.txt";
-        String searchTerm = " sir ";
-        int numThreads = 4;
+        String searchTerm = " courtier ";
+        int numThreads = 1;
 
         long startTime = System.currentTimeMillis();
 
