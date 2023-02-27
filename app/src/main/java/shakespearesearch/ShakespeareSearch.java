@@ -40,16 +40,21 @@ public class ShakespeareSearch {
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         }
-        return null;
+        return null; //return an actual message saying "no matches found"? or do you just implement that in the fe?
     }
 
     private static List<Chunk> readChunksFromResource(String resourceName) throws IOException {
         InputStreamReader isr = new InputStreamReader(ShakespeareSearch.class.getResourceAsStream(resourceName));
         try (BufferedReader reader = new BufferedReader(isr)) {
             List<String> lines = reader.lines().collect(Collectors.toList());
-
             List<Chunk> chunks = new ArrayList<>();
+
             for (int i = 0; i < lines.size(); i += CHUNK_SIZE) {
+                // int end = i + CHUNK_SIZE;
+                // if (end > lines.size()) {
+                //     end = lines.size();
+                // }
+                // List<String> chunkLines = lines.subList(i, end);
                 List<String> chunkLines = lines.subList(i, Math.min(i + CHUNK_SIZE, lines.size()));
                 chunks.add(new Chunk(chunkLines, i));
             }
