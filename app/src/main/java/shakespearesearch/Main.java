@@ -3,11 +3,11 @@ package shakespearesearch;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         String resourceName = "/shakespeare.txt";
-        String searchTerm = " hermit ";
+        String searchTerm = "a";
 
-        
-        for (int numThreads = 1; numThreads <= 20; numThreads++) {
-            ShakespeareSearch search = new ShakespeareSearch(resourceName, searchTerm, numThreads);
+        //looks like 20 threads is the winner so far...
+        for (int numThreads = 1; numThreads <= 200; numThreads++) {
+            Search search = new Search(resourceName, searchTerm, numThreads);
             long startTime = System.nanoTime();
             int matches = search.search();
             long endTime = System.nanoTime();
@@ -16,7 +16,6 @@ public class Main {
         }
         
 
-        //getting errors when having huge number of matches
         //test cases: no matches, a billion matches, null search term, illegal search term
     }
 }
