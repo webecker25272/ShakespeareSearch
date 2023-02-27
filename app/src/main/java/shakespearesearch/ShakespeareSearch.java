@@ -27,10 +27,13 @@ public class ShakespeareSearch {
     public List<Match> search() throws InterruptedException {
         try {
             List<Chunk> chunks = readChunksFromResource(resourceName);
-
+            
+            //this is the output of the whole thing... need to display this in table format for the FE
+            //where to inject the markdown?
             List<Match> matches = searchChunks(chunks, searchTerm);
 
             for (Match match : matches) {
+                //want to catch the actual matched sequence so i can bold it in the fe
                 System.out.println("Match found on line " + (match.getLineNumber() + 1) + ": " + match.getLine());
             }
             return matches;
