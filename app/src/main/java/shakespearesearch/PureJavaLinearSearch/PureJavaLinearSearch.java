@@ -1,4 +1,4 @@
-package shakespearesearch;
+package shakespearesearch.PureJavaLinearSearch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,72 +10,58 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class Search {
-    private static final int CHUNK_SIZE = 1000; // should this be set to an intelligent number?
-    private static String resourceName; // should probably load some text into a PG database and try to optimize
-    private static String searchTerm;
-    private static int numThreads;
+import shakespearesearch.*;
 
-    //need to create an Algo class that has getAlgoName() and search() or run()
-    public Search(String resourceName, String searchTerm, int numThreads) {
-        Search.resourceName = resourceName;
-        Search.searchTerm = searchTerm.toLowerCase();
-        Search.numThreads = numThreads;
+public class PureJavaLinearSearch extends Algo {
+    private static final int CHUNK_SIZE = 1000;
+    private String resourceName;
+    private String searchTerm;
+    private int numThreads;
 
+    public PureJavaLinearSearch() {
+        super("Pure Java Linear Search");
     }
 
-    public String getAlgoName() {
-        return "Pure Java Linear Search";
-    }
-    
-    public int search() throws InterruptedException { //should return a matches object that can be serialized into a table
+    @Override
+    public void run(String resourceName, String searchTerm, int numThreads) {
+        this.resourceName = resourceName;
+        this.searchTerm = searchTerm.toLowerCase();
+        this.numThreads = numThreads;
+
         try {
             List<Chunk> chunks = readChunksFromResource(resourceName);
-
-            // this is the output of the whole thing... need to display this in table format
-            // for the FE
-            // where to inject the markdown?
             List<Match> matches = searchChunks(chunks, searchTerm);
 
-            // for (Match match : matches) {
-            //     // want to catch the actual matched sequence so i can bold it in the fe
-            //     System.out.println("Match found on line " + (match.getLineNumber() + 1) + ": " + match.getLine());
-            // }
-            return matches.size();
-        } catch (IOException e) {
+            int numMatches = matches.size();
+            Evaluator timer = new Evaluator(getAlgoName(), numThreads);
+            timer.start();
+            timer.stop(numMatches);
+            timer.evaluate();
+        } catch (IOException | InterruptedException e) {
             System.err.println("Error: " + e.getMessage());
         }
-        return 0; // return an actual message saying "no matches found"? or do you just implement that in the fe?
     }
 
-    private static List<Chunk> readChunksFromResource(String resourceName) throws IOException {
-        InputStreamReader isr = new InputStreamReader(Search.class.getResourceAsStream(resourceName));
+    private List<Chunk> readChunksFromResource(String resourceName) throws IOException {
+        InputStreamReader isr = new InputStreamReader(PureJavaLinearSearch.class.getResourceAsStream(resourceName));
         try (BufferedReader reader = new BufferedReader(isr)) {
             List<String> lines = reader.lines().collect(Collectors.toList());
             List<Chunk> chunks = new ArrayList<>();
 
             for (int i = 0; i < lines.size(); i += CHUNK_SIZE) {
-                // int end = i + CHUNK_SIZE;
-                // if (end > lines.size()) {
-                // end = lines.size();
-                // }
-                // List<String> chunkLines = lines.subList(i, end);
                 List<String> chunkLines = lines.subList(i, Math.min(i + CHUNK_SIZE, lines.size()));
                 chunks.add(new Chunk(chunkLines, i));
             }
             return chunks;
         }
-        // return null;
     }
 
-    private static List<Match> searchChunks(List<Chunk> chunks, String searchTerm) throws InterruptedException {
-
+    private List<Match> searchChunks(List<Chunk> chunks, String searchTerm) throws InterruptedException {
         List<Match> matches = new ArrayList<>();
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 
         for (int i = 0; i < chunks.size(); i++) {
             Chunk chunk = chunks.get(i);
-            // executor.submit(new SearchTask(chunk, searchTerm, matches));
             executor.submit(() -> searchChunk(chunk, searchTerm, matches));
         }
 
@@ -83,12 +69,12 @@ public class Search {
         try {
             executor.awaitTermination(10, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
-            System.err.println("Hanging threads.." + e.getMessage()); // which thread got hung?
+            System.err.println("Hanging threads.." + e.getMessage());
         }
         return matches;
     }
 
-    private static void searchChunk(Chunk chunk, String searchTerm, List<Match> matches) {
+    private void searchChunk(Chunk chunk, String searchTerm, List<Match> matches) {
         int startIndex = chunk.getStartIndex();
         for (int i = 0; i < chunk.getLines().size(); i++) {
             String line = chunk.getLines().get(i);

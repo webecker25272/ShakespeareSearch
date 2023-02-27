@@ -1,4 +1,5 @@
-package shakespearesearch;
+package shakespearesearch.PureJavaLinearSearch;
+
 import java.util.List;
 
 public class Chunk {

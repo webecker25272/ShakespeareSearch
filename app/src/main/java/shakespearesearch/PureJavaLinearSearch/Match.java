@@ -1,4 +1,5 @@
-package shakespearesearch;
+package shakespearesearch.PureJavaLinearSearch;
+
 
 public class Match {
     private final int lineNumber;
