@@ -32,10 +32,10 @@ public class ShakespeareSearch {
             // where to inject the markdown?
             List<Match> matches = searchChunks(chunks, searchTerm);
 
-            for (Match match : matches) {
-                // want to catch the actual matched sequence so i can bold it in the fe
-                System.out.println("Match found on line " + (match.getLineNumber() + 1) + ": " + match.getLine());
-            }
+            // for (Match match : matches) {
+            //     want to catch the actual matched sequence so i can bold it in the fe
+            //     System.out.println("Match found on line " + (match.getLineNumber() + 1) + ": " + match.getLine());
+            // }
             return matches.size();
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());

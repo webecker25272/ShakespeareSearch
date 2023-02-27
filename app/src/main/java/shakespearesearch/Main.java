@@ -3,16 +3,16 @@ package shakespearesearch;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         String resourceName = "/shakespeare.txt";
-        String searchTerm = " Thou'dst ";
+        String searchTerm = " hermit ";
 
         
-        for (int i = 0; i <= 20; i++) {
+        for (int i = 1; i <= 20; i++) {
             ShakespeareSearch search = new ShakespeareSearch(resourceName, searchTerm, i);
             long startTime = System.nanoTime();
             int matches = search.search();
             long endTime = System.nanoTime();
             long duration = (endTime - startTime) / 1000000;
-            System.out.println("Thread count: " + i + ", Matches found: " + matches + ", Time taken: " + duration + " ms");
+            System.out.println("Thread count: " + i + ".  Time taken: " + duration + " ms.  Avg: " + duration/matches);
         }
         
 
