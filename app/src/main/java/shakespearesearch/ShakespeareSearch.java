@@ -18,12 +18,12 @@ public class ShakespeareSearch {
 
     public ShakespeareSearch(String resourceName, String searchTerm, int numThreads) {
         ShakespeareSearch.resourceName = resourceName;
-        ShakespeareSearch.searchTerm = searchTerm;
+        ShakespeareSearch.searchTerm = searchTerm.toLowerCase();
         ShakespeareSearch.numThreads = numThreads;
 
     }
 
-    public List<Match> search() throws InterruptedException {
+    public int search() throws InterruptedException {
         try {
             List<Chunk> chunks = readChunksFromResource(resourceName);
 
@@ -36,12 +36,11 @@ public class ShakespeareSearch {
                 // want to catch the actual matched sequence so i can bold it in the fe
                 System.out.println("Match found on line " + (match.getLineNumber() + 1) + ": " + match.getLine());
             }
-            return matches;
+            return matches.size();
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         }
-        return null; // return an actual message saying "no matches found"? or do you just implement
-                     // that in the fe?
+        return 0; // return an actual message saying "no matches found"? or do you just implement that in the fe?
     }
 
     private static List<Chunk> readChunksFromResource(String resourceName) throws IOException {
