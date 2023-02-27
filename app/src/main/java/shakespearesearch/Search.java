@@ -10,16 +10,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class ShakespeareSearch {
+public class Search {
     private static final int CHUNK_SIZE = 1000; // should this be set to an intelligent number?
     private static String resourceName; // should probably load some text into a PG database and try to optimize
     private static String searchTerm;
     private static int numThreads;
 
-    public ShakespeareSearch(String resourceName, String searchTerm, int numThreads) {
-        ShakespeareSearch.resourceName = resourceName;
-        ShakespeareSearch.searchTerm = searchTerm.toLowerCase();
-        ShakespeareSearch.numThreads = numThreads;
+    public Search(String resourceName, String searchTerm, int numThreads) {
+        Search.resourceName = resourceName;
+        Search.searchTerm = searchTerm.toLowerCase();
+        Search.numThreads = numThreads;
 
     }
 
@@ -44,7 +44,7 @@ public class ShakespeareSearch {
     }
 
     private static List<Chunk> readChunksFromResource(String resourceName) throws IOException {
-        InputStreamReader isr = new InputStreamReader(ShakespeareSearch.class.getResourceAsStream(resourceName));
+        InputStreamReader isr = new InputStreamReader(Search.class.getResourceAsStream(resourceName));
         try (BufferedReader reader = new BufferedReader(isr)) {
             List<String> lines = reader.lines().collect(Collectors.toList());
             List<Chunk> chunks = new ArrayList<>();
