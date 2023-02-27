@@ -78,7 +78,7 @@ public class Search {
         try {
             executor.awaitTermination(10, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
-            System.err.println("Hanging threads.." + e.getMessage()); // which thread?
+            System.err.println("Hanging threads.." + e.getMessage()); // which thread got hung?
         }
         return matches;
     }
