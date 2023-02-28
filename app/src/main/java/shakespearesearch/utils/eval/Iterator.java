@@ -12,9 +12,10 @@ public class Iterator {
 
         for (int numThreads = DEFAULT_MIN_THREADS; numThreads <= maxThreads; numThreads += DEFAULT_STEP_SIZE) {
             evaluator.start();
-            int matches = algo.run(resourceName, searchTerm, numThreads);
-            evaluator.stop(matches);
-            evaluator.evaluate();
+            int numMatches = algo.run(resourceName, searchTerm, numThreads);
+            evaluator.stop(numMatches);
+            System.out.println(numMatches);
+            //evaluator.evaluate();
         }
     }
 }
