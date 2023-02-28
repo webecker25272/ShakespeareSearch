@@ -7,7 +7,7 @@ import shakespearesearch.utils.eval.Iterator;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         String resourceName = "/shakespeare.txt";
-        String searchTerm = " rascal ";
+        String searchTerm = " scoundrel ";
 
         Algo PJLS = new PureJavaLinearSearch();
         Iterator.iterate(PJLS, resourceName, searchTerm, 10);

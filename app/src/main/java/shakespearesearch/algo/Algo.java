@@ -3,6 +3,7 @@ package shakespearesearch.algo;
 import shakespearesearch.utils.threading.Chunk;
 import shakespearesearch.utils.threading.Match;
 
+import java.io.IOException;
 import java.util.List;
 
 public abstract class Algo {
@@ -16,10 +17,12 @@ public abstract class Algo {
         return algoName;
     }
 
-    public abstract List<Match> searchChunks(List<Chunk> chunks, String searchTerm);
-
     public abstract List<Match> searchChunk(List<Chunk> chunks, String searchTerm);
 
-    public abstract int run(String resourceName, String searchTerm, int numThreads);
+    public int run(String resourceName, String searchTerm, int numThreads) throws IOException {
+        List<String> lines = FileUtils.readLinesFromResource(resourceName);
+        List<Chunk> chunks = ChunkUtils.createChunks(lines);
+        Executor executor = Executor.createExecutor();
+    }
     
 }
