@@ -1,4 +1,4 @@
-package shakespearesearch;
+package shakespearesearch.utils.eval;
 
 public class Evaluator {
     private String algorithm;
@@ -32,7 +32,7 @@ public class Evaluator {
         long usedMemory = getUsedMemory();
         long avgTimePerMatch = getAvgTimePerMatch();
         System.out.printf(
-                "Algo: %-30s. Threads: %-10d. Matches: %-10d. Total Time: %-20s. Avg Time: %-20s. Memory: %-20s\n",
+                "Algo: %-30s Threads: %-10d Matches: %-10d Total Time: %-20s Avg Time: %-20s Memory: %-20s\n",
                 algorithm, numThreads, numMatches, formatNanos(elapsedTime), formatNanos(avgTimePerMatch),
                 formatBytes(usedMemory));
     }

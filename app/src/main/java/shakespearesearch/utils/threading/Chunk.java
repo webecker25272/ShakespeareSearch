@@ -1,4 +1,4 @@
-package shakespearesearch.PureJavaLinearSearch;
+package shakespearesearch.utils.threading;
 
 import java.util.List;
 
