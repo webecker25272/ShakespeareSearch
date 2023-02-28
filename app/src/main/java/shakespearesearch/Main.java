@@ -10,6 +10,6 @@ public class Main {
         String searchTerm = " rascal ";
 
         Algo PJLS = new PureJavaLinearSearch();
-        Iterator.iterate(PJLS, resourceName, searchTerm);
+        Iterator.iterate(PJLS, resourceName, searchTerm, 10);
     }
 }

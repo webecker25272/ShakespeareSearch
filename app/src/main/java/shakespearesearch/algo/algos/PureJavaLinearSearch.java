@@ -1,20 +1,17 @@
 package shakespearesearch.algo.algos;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
 import shakespearesearch.algo.Algo;
 import shakespearesearch.utils.eval.Evaluator;
 import shakespearesearch.utils.search.ChunkUtils;
 import shakespearesearch.utils.threading.Chunk;
 import shakespearesearch.utils.threading.Match;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class PureJavaLinearSearch extends Algo {
 
@@ -23,32 +20,11 @@ public class PureJavaLinearSearch extends Algo {
     }
 
     @Override
-    public void run(String resourceName, String searchTerm, int numThreads) {
-        this.resourceName = resourceName;
-        this.searchTerm = searchTerm.toLowerCase();
-        this.numThreads = numThreads;
-    
-        Evaluator evaluator = new Evaluator(getAlgoName(), numThreads);
-        evaluator.start();
-    
-        try {
-            List<Chunk> chunks = ChunkUtils.readChunksFromResource(resourceName);
-            List<Match> matches = searchChunks(chunks, searchTerm);
-            int numMatches = matches.size();
-            evaluator.stop(numMatches);
-            evaluator.evaluate();
-        } catch (IOException | InterruptedException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
-    }
-    
-    @Override
-    public List<Match> searchChunks(List<Chunk> chunks, String searchTerm) throws InterruptedException {
+    public List<Match> searchChunks(List<Chunk> chunks, String searchTerm) {
         List<Match> matches = new ArrayList<>();
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        ExecutorService executor = Executors.newFixedThreadPool(chunks.size());
 
-        for (int i = 0; i < chunks.size(); i++) {
-            Chunk chunk = chunks.get(i);
+        for (Chunk chunk : chunks) {
             executor.submit(() -> searchChunk(chunk, searchTerm, matches));
         }
 
@@ -56,7 +32,17 @@ public class PureJavaLinearSearch extends Algo {
         try {
             executor.awaitTermination(10, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
-            System.err.println("Hanging threads.." + e.getMessage());
+            System.err.println("Hanging threads: " + e.getMessage());
+        }
+
+        return matches;
+    }
+
+    @Override
+    public List<Match> searchChunk(List<Chunk> chunks, String searchTerm) {
+        List<Match> matches = new ArrayList<>();
+        for (Chunk chunk : chunks) {
+            searchChunk(chunk, searchTerm, matches);
         }
         return matches;
     }
@@ -71,4 +57,26 @@ public class PureJavaLinearSearch extends Algo {
             }
         }
     }
+
+    @Override
+    public int run(String resourceName, String searchTerm, int numThreads) {
+        List<Chunk> chunks;
+        try {
+            chunks = ChunkUtils.readChunksFromResource(resourceName);
+        } catch (IOException e) {
+            System.err.println("Error reading chunks from resource: " + e.getMessage());
+            return -1;
+        }
+
+        List<Match> matches = searchChunks(chunks, searchTerm);
+        int numMatches = matches.size();
+
+        Evaluator evaluator = new Evaluator(getAlgoName(), numThreads);
+        evaluator.start();
+        evaluator.stop(numMatches);
+        evaluator.evaluate();
+
+        return numMatches;
+    }
+
 }

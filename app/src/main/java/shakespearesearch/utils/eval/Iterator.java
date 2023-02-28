@@ -3,18 +3,18 @@ package shakespearesearch.utils.eval;
 import shakespearesearch.algo.Algo;
 
 public class Iterator {
+    private static final int DEFAULT_MIN_THREADS = 1;
+    private static final int DEFAULT_STEP_SIZE = 1;
 
-    public void run(String resourceName, String searchTerm, int maxThreads) {
-        Evaluator evaluator = new Evaluator(getAlgoName(), maxThreads);
-        evaluator.start();
-        try {
-            List<Chunk> chunks = ChunkUtils.readChunksFromResource(resourceName);
-            List<Match> matches = searchChunks(chunks, searchTerm);
-            int numMatches = matches.size();
-            evaluator.stop(numMatches);
+    public static void iterate(Algo algo, String resourceName, String searchTerm, int maxThreads)
+            throws InterruptedException {
+        Evaluator evaluator = new Evaluator(algo.getAlgoName(), maxThreads);
+
+        for (int numThreads = DEFAULT_MIN_THREADS; numThreads <= maxThreads; numThreads += DEFAULT_STEP_SIZE) {
+            evaluator.start();
+            int matches = algo.run(resourceName, searchTerm, numThreads);
+            evaluator.stop(matches);
             evaluator.evaluate();
-        } catch (IOException e) {
-            System.err.println("Error: " + e.getMessage());
         }
     }
 }

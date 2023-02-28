@@ -12,9 +12,14 @@ public abstract class Algo {
         this.algoName = algoName;
     }
 
-    public abstract List<Match> searchChunks(List<Chunk> chunks, String searchTerm);
-
     public String getAlgoName() {
         return algoName;
     }
+
+    public abstract List<Match> searchChunks(List<Chunk> chunks, String searchTerm);
+
+    public abstract List<Match> searchChunk(List<Chunk> chunks, String searchTerm);
+
+    public abstract int run(String resourceName, String searchTerm, int numThreads);
+    
 }
