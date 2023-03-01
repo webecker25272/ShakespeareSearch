@@ -12,6 +12,6 @@ public class Main {
         Iterator iterator = new Iterator();
         Algo PJLS = new PureJavaLinearSearch();
         iterator.iterate(PJLS, resourceName, searchTerm, 10, true);
-        System.out.println(iterator.getResults());
+        
     }
 }
