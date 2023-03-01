@@ -1,15 +1,17 @@
 package shakespearesearch.utils.eval;
 
 import java.lang.management.ManagementFactory;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Evaluator {
+public class RunTimer {
     private String algorithm;
     private int numThreads;
     private long startTime;
     private long endTime;
     private int numMatches;
 
-    public Evaluator(String algorithm) {
+    public RunTimer(String algorithm) {
         this.algorithm = algorithm;
     }
 
@@ -17,13 +19,21 @@ public class Evaluator {
         this.startTime = System.nanoTime();
     }
 
-    public void stop(int numMatches, int numThreads) {
-        this.endTime = System.nanoTime();
-        this.numMatches = numMatches;
-        this.numThreads = numThreads;
+    public Map<String, Object> stop(int numMatches, int numThreads) {
+        long elapsedTime = getElapsedTime();
+        long usedMemory = getUsedMemory();
+        long avgTimePerMatch = getAvgTimePerMatch();
+    
+        Map<String, Object> runResult = new HashMap<>();
+        runResult.put("i", numThreads);
+        runResult.put("totalTime", elapsedTime);
+        runResult.put("avgTime", avgTimePerMatch);
+        runResult.put("usedMemory",usedMemory);
+        return runResult;
     }
+    
 
-    public void evaluate() {
+    public void printLine() {
         long elapsedTime = getElapsedTime();
         long usedMemory = getUsedMemory();
         long avgTimePerMatch = getAvgTimePerMatch();
