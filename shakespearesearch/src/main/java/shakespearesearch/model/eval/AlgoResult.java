@@ -1,4 +1,4 @@
-package shakespearesearch.utils.eval;
+package shakespearesearch.model.eval;
 
 public class AlgoResult {
     private String algoName;

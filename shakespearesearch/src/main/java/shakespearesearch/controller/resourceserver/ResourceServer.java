@@ -1,4 +1,4 @@
-package shakespearesearch.backendserver;
+package shakespearesearch.controller.resourceserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,17 +9,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackendServer {
+public class ResourceServer {
 
     private static final String RESOURCENAME = "/shakespeare.txt";
 
     public static void main(String[] args) {
-        SpringApplication.run(BackendServer.class, args);
+        SpringApplication.run(ResourceServer.class, args);
     }
 
-
     public static String getContent() throws IOException {
-        InputStream inputStream = BackendServer.class.getResourceAsStream(RESOURCENAME);
+        InputStream inputStream = ResourceServer.class.getResourceAsStream(RESOURCENAME);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder stringBuilder = new StringBuilder();
         String line;

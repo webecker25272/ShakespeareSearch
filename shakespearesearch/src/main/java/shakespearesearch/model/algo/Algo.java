@@ -1,9 +1,9 @@
-package shakespearesearch.algo;
+package shakespearesearch.model.algo;
 
-import shakespearesearch.utils.search.ChunkUtils;
-import shakespearesearch.utils.search.FileUtils;
-import shakespearesearch.utils.threading.Chunk;
-import shakespearesearch.utils.threading.Match;
+import shakespearesearch.controller.resourceserver.ResourceController;
+import shakespearesearch.controller.search.ChunkUtils;
+import shakespearesearch.controller.threading.Chunk;
+import shakespearesearch.controller.threading.Match;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public abstract class Algo {
 
     public int run(String resourceName, String searchTerm, int numThreads) {
         try {
-            List<String> lines = FileUtils.readLinesFromResource(resourceName);
+            List<String> lines = ResourceController.readLinesFromResource(resourceName);
             List<Chunk> chunks = ChunkUtils.createChunks(lines);
             ExecutorService executor = Executors.newFixedThreadPool(numThreads); //executor should be its own class
     

@@ -1,4 +1,4 @@
-package shakespearesearch.utils.eval;
+package shakespearesearch.model.eval;
 
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;

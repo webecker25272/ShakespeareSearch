@@ -1,10 +1,10 @@
-package shakespearesearch.utils.eval;
+package shakespearesearch.model.eval;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import shakespearesearch.algo.Algo;
+import shakespearesearch.model.algo.Algo;
 
 public class Iterator {
     private static final int DEFAULT_MIN_THREADS = 1;

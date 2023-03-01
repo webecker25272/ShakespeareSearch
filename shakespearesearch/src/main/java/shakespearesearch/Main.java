@@ -4,11 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-import shakespearesearch.algo.Algo;
-import shakespearesearch.algo.algos.PureJavaLinearSearch;
-import shakespearesearch.utils.eval.AlgoResult;
-import shakespearesearch.utils.eval.Iterator;
-import shakespearesearch.backendserver.BackendServer;
+import shakespearesearch.controller.backendserver.BackendServer;
+import shakespearesearch.model.algo.Algo;
+import shakespearesearch.model.algo.algos.PureJavaLinearSearch;
+import shakespearesearch.model.eval.AlgoResult;
+import shakespearesearch.model.eval.Iterator;
 
 import java.io.IOException;
 import java.util.List;

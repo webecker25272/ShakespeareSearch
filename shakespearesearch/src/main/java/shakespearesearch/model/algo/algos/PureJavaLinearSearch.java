@@ -1,8 +1,8 @@
-package shakespearesearch.algo.algos;
+package shakespearesearch.model.algo.algos;
 
-import shakespearesearch.algo.Algo;
-import shakespearesearch.utils.threading.Chunk;
-import shakespearesearch.utils.threading.Match;
+import shakespearesearch.controller.threading.Chunk;
+import shakespearesearch.controller.threading.Match;
+import shakespearesearch.model.algo.Algo;
 
 import java.util.ArrayList;
 import java.util.List;
