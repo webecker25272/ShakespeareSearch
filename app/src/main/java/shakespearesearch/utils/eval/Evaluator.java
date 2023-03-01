@@ -1,30 +1,26 @@
 package shakespearesearch.utils.eval;
 
+import java.lang.management.ManagementFactory;
+
 public class Evaluator {
     private String algorithm;
     private int numThreads;
     private long startTime;
     private long endTime;
-    private Runtime runtime;
-    private long startMemory;
-    private long endMemory;
     private int numMatches;
 
-    public Evaluator(String algorithm, int numThreads) {
+    public Evaluator(String algorithm) {
         this.algorithm = algorithm;
-        this.numThreads = numThreads;
     }
 
     public void start() {
         this.startTime = System.nanoTime();
-        this.runtime = Runtime.getRuntime();
-        this.startMemory = runtime.totalMemory() - runtime.freeMemory();
     }
 
-    public void stop(int numMatches) {
+    public void stop(int numMatches, int numThreads) {
         this.endTime = System.nanoTime();
-        this.endMemory = runtime.totalMemory() - runtime.freeMemory();
         this.numMatches = numMatches;
+        this.numThreads = numThreads;
     }
 
     public void evaluate() {
@@ -42,7 +38,9 @@ public class Evaluator {
     }
 
     private long getUsedMemory() {
-        return this.endMemory - this.startMemory;
+        long used = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();
+        used += ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage().getUsed();
+        return used;
     }
 
     private long getAvgTimePerMatch() {
