@@ -6,7 +6,6 @@ import java.util.Map;
 
 public class RunTimer {
     private String algorithm;
-    private int numThreads;
     private long startTime;
     private long endTime;
     private int numMatches;
@@ -57,6 +56,7 @@ public class RunTimer {
     }
 
     public Map<String, Object> stop(int numMatches, int numThreads, boolean printLine) {
+        this.endTime = System.nanoTime();
         long elapsedTime = getElapsedTime();
         long usedMemory = getUsedMemory();
         long avgTimePerMatch = getAvgTimePerMatch();
