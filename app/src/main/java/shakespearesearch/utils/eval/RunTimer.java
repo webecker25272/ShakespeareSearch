@@ -11,6 +11,43 @@ public class RunTimer {
     private long endTime;
     private int numMatches;
 
+    public enum MemoryUnit {
+        BYTES(1L),
+        KILOBYTES(1024L),
+        MEGABYTES(1024L * 1024L),
+        GIGABYTES(1024L * 1024L * 1024L);
+
+        private final long multiplier;
+
+        MemoryUnit(long multiplier) {
+            this.multiplier = multiplier;
+        }
+
+        public long toBytes(long value) {
+            return value * multiplier;
+        }
+    }
+
+    public enum TimeDisplay {
+        NANOS(1L),
+        MICROS(1000L),
+        MILLIS(1000L * 1000L),
+        SECS(1000L * 1000L * 1000L);
+
+        private final long multiplier;
+
+        TimeDisplay(long multiplier) {
+            this.multiplier = multiplier;
+        }
+
+        public long toMillis(long value) {
+            return value / multiplier;
+        }
+    }
+
+    private MemoryUnit memoryDisplay = MemoryUnit.MEGABYTES;
+    private TimeDisplay timeDisplay = TimeDisplay.MILLIS;
+
     public RunTimer(String algorithm) {
         this.algorithm = algorithm;
     }
@@ -19,28 +56,25 @@ public class RunTimer {
         this.startTime = System.nanoTime();
     }
 
-    public Map<String, Object> stop(int numMatches, int numThreads) {
+    public Map<String, Object> stop(int numMatches, int numThreads, boolean printLine) {
         long elapsedTime = getElapsedTime();
         long usedMemory = getUsedMemory();
         long avgTimePerMatch = getAvgTimePerMatch();
-    
-        Map<String, Object> runResult = new HashMap<>();
-        runResult.put("i", numThreads);
-        runResult.put("totalTime", elapsedTime);
-        runResult.put("avgTime", avgTimePerMatch);
-        runResult.put("usedMemory",usedMemory);
-        return runResult;
-    }
-    
 
-    public void printLine() {
-        long elapsedTime = getElapsedTime();
-        long usedMemory = getUsedMemory();
-        long avgTimePerMatch = getAvgTimePerMatch();
-        System.out.printf(
-                "Algo: %-30s Threads: %-10d Matches: %-10d Total Time: %-20s Avg Time: %-20s Memory: %-20s\n",
-                algorithm, numThreads, numMatches, formatNanos(elapsedTime), formatNanos(avgTimePerMatch),
-                formatBytes(usedMemory));
+        Map<String, Object> runResult = new HashMap<>();
+        runResult.put("algo", algorithm);
+        runResult.put("i", numThreads);
+        runResult.put("totalTime", timeDisplay.toMillis(elapsedTime));
+        runResult.put("avgTime", timeDisplay.toMillis(avgTimePerMatch));
+        runResult.put("usedMemory", memoryDisplay.toBytes(usedMemory));
+
+        if (printLine) {
+            System.out.printf("i: %d, Total Time: %d ms, Avg Time: %d ms, Memory: %d %s\n",
+                    numThreads, timeDisplay.toMillis(elapsedTime), timeDisplay.toMillis(avgTimePerMatch),
+                    memoryDisplay.toBytes(usedMemory), memoryDisplay.name().toLowerCase());
+        }
+
+        return runResult;
     }
 
     private long getElapsedTime() {
@@ -57,27 +91,11 @@ public class RunTimer {
         return this.numMatches > 0 ? getElapsedTime() / this.numMatches : 0;
     }
 
-    private String formatNanos(long nanos) {
-        if (nanos < 1000) {
-            return nanos + " ns";
-        } else if (nanos < 1000000) {
-            return nanos / 1000 + " μs";
-        } else if (nanos < 1000000000) {
-            return nanos / 1000000 + " ms";
-        } else {
-            return nanos / 1000000000 + " s";
-        }
+    public void setMemoryDisplay(MemoryUnit unit) {
+        this.memoryDisplay = unit;
     }
 
-    private String formatBytes(long bytes) {
-        if (bytes < 1024) {
-            return bytes + " B";
-        } else if (bytes < 1048576) {
-            return bytes / 1024 + " KB";
-        } else if (bytes < 1073741824) {
-            return bytes / 1048576 + " MB";
-        } else {
-            return bytes / 1073741824 + " GB";
-        }
+    public void setTimeDisplay(TimeDisplay unit) {
+        this.timeDisplay = unit;
     }
 }
