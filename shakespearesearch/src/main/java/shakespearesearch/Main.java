@@ -10,6 +10,7 @@ import shakespearesearch.utils.eval.AlgoResult;
 import shakespearesearch.utils.eval.Iterator;
 import shakespearesearch.backendserver.BackendServer;
 
+import java.io.IOException;
 import java.util.List;
 
 @SpringBootApplication
@@ -17,16 +18,15 @@ import java.util.List;
 public class Main {
     private static final boolean PRINTLINE = true;
     private static final int MAXTHREADS = 10;
-    private static final String RESOURCENAME = "/shakespeare.txt";
     private static final String SEARCHTERM = " test ";
 
-    public static void main(String[] args) throws InterruptedException {     
-        String fileContent = BackendServer.getFileContent("shakespeare.txt");
+    public static void main(String[] args) throws InterruptedException, IOException {     
+        String responseData = BackendServer.getContent();
 
         Iterator iterator = new Iterator();
 
         Algo PJLS = new PureJavaLinearSearch();
-        List<AlgoResult> pjlsResult = iterator.iterate(PJLS, RESOURCENAME, SEARCHTERM, MAXTHREADS, PRINTLINE); //this is what gets displayed to the front end
+        List<AlgoResult> pjlsResult = iterator.iterate(PJLS, responseData, SEARCHTERM, MAXTHREADS, PRINTLINE); //this is what gets displayed to the front end
         
         //new algos go here
     
