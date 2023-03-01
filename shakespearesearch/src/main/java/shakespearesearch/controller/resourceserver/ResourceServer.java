@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import shakespearesearch.controller.resourceserver.utils.Caching;
+//import shakespearesearch.controller.resourceserver.utils.Caching;
 import shakespearesearch.controller.resourceserver.utils.Compression;
 //import shakespearesearch.controller.resourceserver.utils.Pagination;
 
@@ -21,19 +21,23 @@ public class ResourceServer {
         SpringApplication.run(ResourceServer.class, args);
     }
 
-    public static String getContent() throws IOException {
+    public static byte[] serveContent() throws IOException {
         //Read straight from the resource
         String content = readContent();
         
-        //Compress
-        content = Compression.compress(content);
+        //Gzip compress
+        byte[] compressed = Compression.compress(content);
         
         //Cache
-        Caching.cache(content);
+        //dump the compressed results to a cache.  resource controller checks
+        //cache first, then if there's no match, the resource controller pings
+        //the server
         
-
+        //Paginate
+        //if there's not match in cache, resource controller makes a request 
+        //to the server for each page
         
-        return content;
+        return compressed;
     }
     
     
