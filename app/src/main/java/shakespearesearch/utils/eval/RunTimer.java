@@ -10,6 +10,12 @@ public class RunTimer {
     private long endTime;
     private int numMatches;
 
+    private static final String ALGO_KEY = "algo";
+    private static final String NUM_THREADS_KEY = "i";
+    private static final String TOTAL_TIME_KEY = "totalTime";
+    private static final String AVG_TIME_KEY = "avgTime";
+    private static final String USED_MEMORY_KEY = "usedMemory";
+
     public enum MemoryUnit {
         BYTES(1L),
         KILOBYTES(1024L),
@@ -62,11 +68,11 @@ public class RunTimer {
         long avgTimePerMatch = getAvgTimePerMatch();
 
         Map<String, Object> runResult = new HashMap<>();
-        runResult.put("algo", algorithm);
-        runResult.put("i", numThreads);
-        runResult.put("totalTime", timeDisplay.toMillis(elapsedTime));
-        runResult.put("avgTime", timeDisplay.toMillis(avgTimePerMatch));
-        runResult.put("usedMemory", memoryDisplay.toBytes(usedMemory));
+        runResult.put(ALGO_KEY, algorithm);
+        runResult.put(NUM_THREADS_KEY, numThreads);
+        runResult.put(TOTAL_TIME_KEY, timeDisplay.toMillis(elapsedTime));
+        runResult.put(AVG_TIME_KEY, timeDisplay.toMillis(avgTimePerMatch));
+        runResult.put(USED_MEMORY_KEY, memoryDisplay.toBytes(usedMemory));
 
         if (printLine) {
             System.out.printf("i: %d, Total Time: %d ms, Avg Time: %d ms, Memory: %d %s\n",
