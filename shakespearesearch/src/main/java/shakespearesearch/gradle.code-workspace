@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "gradle",
+			"path": "../../../../../../../Downloads/demo/gradle"
+		},
+		{
+			"name": "ShakespeareSearch",
+			"path": "../../../../.."
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic",
+		"java.configuration.updateBuildConfiguration": "automatic"
+	}
+}
