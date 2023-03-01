@@ -23,7 +23,7 @@ public class RunTimer {
         }
 
         public long toBytes(long value) {
-            return value * multiplier;
+            return value / multiplier;
         }
     }
 

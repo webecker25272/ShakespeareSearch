@@ -9,7 +9,9 @@ public class Main {
         String resourceName = "/shakespeare.txt";
         String searchTerm = " test ";
 
+        Iterator iterator = new Iterator();
         Algo PJLS = new PureJavaLinearSearch();
-        Iterator.iterate(PJLS, resourceName, searchTerm, 10, true);
+        iterator.iterate(PJLS, resourceName, searchTerm, 10, true);
+        System.out.println(iterator.getResults());
     }
 }

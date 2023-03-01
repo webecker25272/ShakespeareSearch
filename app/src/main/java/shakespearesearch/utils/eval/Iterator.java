@@ -7,11 +7,11 @@ import java.util.Map;
 import shakespearesearch.algo.Algo;
 
 public class Iterator {
-    private static final int DEFAULT_MIN_THREADS = 1;
-    private static final int DEFAULT_STEP_SIZE = 1;
-    private static List<Map<String, Object>> results = new ArrayList<>();
+    private final int DEFAULT_MIN_THREADS = 1;
+    private final int DEFAULT_STEP_SIZE = 1;
+    private List<Map<String, Object>> results = new ArrayList<>();
 
-    public static void iterate(Algo algo, String resourceName, String searchTerm, int maxThreads, boolean printLine)
+    public void iterate(Algo algo, String resourceName, String searchTerm, int maxThreads, boolean printLine)
             throws InterruptedException {
         RunTimer runTimer = new RunTimer(algo.getAlgoName());
 
@@ -23,7 +23,7 @@ public class Iterator {
         }
     }
 
-    public List<Map<String, Object>> getResults() {
+    public  List<Map<String, Object>> getResults() {
         return results;
     }
 }
