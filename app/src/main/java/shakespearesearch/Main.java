@@ -2,19 +2,24 @@ package shakespearesearch;
 
 import shakespearesearch.algo.Algo;
 import shakespearesearch.algo.algos.PureJavaLinearSearch;
+import shakespearesearch.utils.eval.AlgoResult;
 import shakespearesearch.utils.eval.Iterator;
 
-public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        String resourceName = "/shakespeare.txt";
-        String searchTerm = " test ";
+import java.util.List;
 
+public class Main {
+    private static final boolean PRINTLINE = true;
+    private static final int MAXTHREADS = 10;
+    private static final String RESOURCENAME = "/shakespeare.txt";
+    private static final String SEARCHTERM = " test ";
+
+    public static void main(String[] args) throws InterruptedException {        
         Iterator iterator = new Iterator();
 
         Algo PJLS = new PureJavaLinearSearch();
-        iterator.iterate(PJLS, resourceName, searchTerm, 10, true);
+        List<AlgoResult> pjlsResult = iterator.iterate(PJLS, RESOURCENAME, SEARCHTERM, MAXTHREADS, PRINTLINE); //this is what gets displayed to the front end
         
 
-        
+    
     }
 }
