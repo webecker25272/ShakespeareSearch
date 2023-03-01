@@ -1,4 +1,4 @@
-package shakespearesearch.controller.threading;
+package shakespearesearch.controller.distributedsearch;
 
 import java.util.List;
 

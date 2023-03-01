@@ -1,4 +1,4 @@
-package shakespearesearch.controller.threading;
+package shakespearesearch.controller.distributedsearch;
 
 
 public class Match {

@@ -1,9 +1,9 @@
 package shakespearesearch.model.algo;
 
+import shakespearesearch.controller.distributedsearch.Chunk;
+import shakespearesearch.controller.distributedsearch.ChunkUtils;
+import shakespearesearch.controller.distributedsearch.Match;
 import shakespearesearch.controller.resourceserver.ResourceController;
-import shakespearesearch.controller.search.ChunkUtils;
-import shakespearesearch.controller.threading.Chunk;
-import shakespearesearch.controller.threading.Match;
 
 import java.io.IOException;
 import java.util.ArrayList;

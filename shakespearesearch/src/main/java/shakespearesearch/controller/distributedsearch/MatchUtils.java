@@ -1,9 +1,7 @@
-package shakespearesearch.controller.search;
+package shakespearesearch.controller.distributedsearch;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import shakespearesearch.controller.threading.Match;
 
 public class MatchUtils {
     private static final String REGEX_SPECIAL_CHARS = "[\\[\\]\\{\\}\\(\\)\\-\\+\\*\\?\\^\\$\\\\\\.\\|]";

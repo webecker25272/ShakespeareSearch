@@ -8,6 +8,10 @@ import java.io.InputStreamReader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import shakespearesearch.controller.resourceserver.utils.Caching;
+import shakespearesearch.controller.resourceserver.utils.Compression;
+//import shakespearesearch.controller.resourceserver.utils.Pagination;
+
 @SpringBootApplication
 public class ResourceServer {
 
@@ -18,6 +22,22 @@ public class ResourceServer {
     }
 
     public static String getContent() throws IOException {
+        //Read straight from the resource
+        String content = readContent();
+        
+        //Compress
+        content = Compression.compress(content);
+        
+        //Cache
+        Caching.cache(content);
+        
+
+        
+        return content;
+    }
+    
+    
+    private static String readContent() throws IOException {
         InputStream inputStream = ResourceServer.class.getResourceAsStream(RESOURCENAME);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder stringBuilder = new StringBuilder();

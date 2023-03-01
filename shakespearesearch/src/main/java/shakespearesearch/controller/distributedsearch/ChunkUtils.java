@@ -1,9 +1,7 @@
-package shakespearesearch.controller.search;
+package shakespearesearch.controller.distributedsearch;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import shakespearesearch.controller.threading.Chunk;
 
 public class ChunkUtils {
     private static final int DEFAULT_CHUNK_SIZE = 1000;
