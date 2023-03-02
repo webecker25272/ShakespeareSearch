@@ -4,40 +4,44 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//import shakespearesearch.controller.resourceserver.utils.Caching;
 import shakespearesearch.controller.resourceserver.utils.Compression;
-//import shakespearesearch.controller.resourceserver.utils.Pagination;
+import shakespearesearch.controller.resourceserver.utils.Pagination;
+import shakespearesearch.controller.kafka.PaginatedData;
+import shakespearesearch.controller.kafka.Producer;
+
 
 @SpringBootApplication
 public class ResourceServer {
-
+    private static final int PAGESIZEKB= 50;
     private static final String RESOURCENAME = "/shakespeare.txt";
+    private static final String TOPICNAME = "resource-paginated";
 
     public static void main(String[] args) {
         SpringApplication.run(ResourceServer.class, args);
     }
 
-    public static byte[] serveContent() throws IOException {
+    public static void serveContent() throws IOException {
         //Read straight from the resource
         String content = readContent();
         
         //Gzip compress
         byte[] compressed = Compression.compress(content);
         
-        //Cache
-        //dump the compressed results to a cache.  resource controller checks
-        //cache first, then if there's no match, the resource controller pings
-        //the server
-        
-        //Paginate
-        //if there's not match in cache, resource controller makes a request 
-        //to the server for each page
-        
-        return compressed;
+        //Cache?
+    
+        Producer producer = new Producer();
+        List<byte[]> paginatedBytes = Pagination.paginate(compressed, PAGESIZEKB);
+        for (int i = 0; i < paginatedBytes.size(); i++) {
+            byte[] pageBytes = paginatedBytes.get(i);
+            PaginatedData data = new PaginatedData(i, pageBytes);
+            producer.produce(TOPICNAME, Integer.toString(i), data);
+        }
+        producer.close();
     }
     
     

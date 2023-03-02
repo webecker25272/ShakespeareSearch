@@ -4,7 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-import shakespearesearch.controller.backendserver.BackendServer;
+import shakespearesearch.controller.resourceserver.ResourceController;
+import shakespearesearch.controller.resourceserver.ResourceServer;
 import shakespearesearch.model.algo.Algo;
 import shakespearesearch.model.algo.algos.PureJavaLinearSearch;
 import shakespearesearch.model.eval.AlgoResult;
@@ -21,7 +22,7 @@ public class Main {
     private static final String SEARCHTERM = " test ";
 
     public static void main(String[] args) throws InterruptedException, IOException {     
-        String responseData = BackendServer.getContent();
+        String responseData = ResourceController.readLinesFromResource();
 
         Iterator iterator = new Iterator();
 

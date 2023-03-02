@@ -11,6 +11,13 @@ import shakespearesearch.controller.resourceserver.utils.Compression;;
 public class ResourceController {
 
     public static List<String> handleRequest() throws IOException {
+        //check cache for a hit
+        
+        //make n pagination requests to resource server
+        //collate results into a List<BufferedReader> or InputStream
+        //send it to the model 
+
+        //decompress
         byte[] compressed = ResourceServer.serveContent();
         String decompressed = Compression.decompress(compressed);
 

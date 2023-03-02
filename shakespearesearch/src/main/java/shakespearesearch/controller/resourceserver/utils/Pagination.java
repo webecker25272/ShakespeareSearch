@@ -1,20 +1,25 @@
-// package shakespearesearch.controller.resourceserver.utils;
+package shakespearesearch.controller.resourceserver.utils;
 
-// import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
-// public class Pagination {
-//     private final int pageSize;
+public class Pagination {
 
-//     public Pagination(int pageSize) {
-//         this.pageSize = pageSize;
-//     }
+    public static List<byte[]> paginate(byte[] compressed, int pageSizeKB) {
+        List<byte[]> pages = new ArrayList<>();
+        int pageSizeBytes = pageSizeKB * 1024;
 
-//     public List<String> paginate(List<String> lines, int page) {
-//         int startIndex = (page - 1) * pageSize;
-//         if (startIndex >= lines.size()) {
-//             return List.of();
-//         }
-//         int endIndex = Math.min(startIndex + pageSize, lines.size());
-//         return lines.subList(startIndex, endIndex);
-//     }
-// }
+        int position = 0;
+        while (position < compressed.length) {
+            int remaining = compressed.length - position;
+            int pageSizeToUse = Math.min(pageSizeBytes, remaining);
+            byte[] page = new byte[pageSizeToUse];
+            System.arraycopy(compressed, position, page, 0, pageSizeToUse);
+            pages.add(page);
+            position += pageSizeToUse;
+        }
+    
+        return pages;
+    }
+    
+}
