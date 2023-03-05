@@ -3,29 +3,35 @@ package shakespearesearch.controller.resourceserver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import shakespearesearch.controller.resourceserver.utils.Compression;;
+import shakespearesearch.controller.kafka.Consumer;
+import shakespearesearch.controller.kafka.PaginatedData;
+import shakespearesearch.controller.resourceserver.utils.Compression;
 
 public class ResourceController {
 
+    private static final String TOPICNAME = "resource-paginated";
+
     public static List<String> handleRequest() throws IOException {
-        //check cache for a hit
-        
-        //make n pagination requests to resource server
-        //collate results into a List<BufferedReader> or InputStream
-        //send it to the model 
 
-        //decompress
-        byte[] compressed = ResourceServer.serveContent();
-        String decompressed = Compression.decompress(compressed);
+        Consumer consumer = new Consumer("localhost:9092", TOPICNAME);
+        consumer.start();
 
-        try (BufferedReader reader = new BufferedReader(new StringReader(decompressed))) {
-            return reader.lines().collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new IOException("Error reading resource.  " + e.getMessage());
+        // decompress and collect the data into a List<String>
+        List<String> result = new ArrayList<>();
+        List<PaginatedData> paginatedDataList = consumer.getPaginatedDataList();
+        for (PaginatedData paginatedData : paginatedDataList) {
+            byte[] compressedData = paginatedData.getData();
+            String decompressedData = Compression.decompress(compressedData);
+            try (BufferedReader reader = new BufferedReader(new StringReader(decompressedData))) {
+                result.addAll(reader.lines().collect(Collectors.toList()));
+            }
         }
+
+        consumer.close();
+        return result;
     }
-    
 }

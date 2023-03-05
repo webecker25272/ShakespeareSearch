@@ -1,29 +1,26 @@
 package shakespearesearch.controller.kafka;
 
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import shakespearesearch.controller.resourceserver.utils.Compression;
 
 public class Producer {
-    private final KafkaProducer<String, PaginatedData> producer;
+    private KafkaProducer<String, byte[]> producer;
 
-    public Producer() {
+    public Producer(String bootstrapServers) {
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
+        props.put("bootstrap.servers", bootstrapServers);
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "shakespearesearch.controller.resourceserver.utils.kafka.PaginatedDataSerializer");
-
+        props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
         producer = new KafkaProducer<>(props);
     }
 
-    public void produce(String topic, String key, PaginatedData data) {
-        try {
-            producer.send(new ProducerRecord<>(topic, key, data)).get(); //org.apache.kafka.clients.producer.RecordMetadata
-        } catch (InterruptedException | ExecutionException e) {
-            System.err.printf("Error producing record: %s%n", e.getMessage());
-        }
+    public void produce(String topic, byte[] data) {
+        byte[] compressed = Compression.compress(data);
+        ProducerRecord<String, byte[]> record = new ProducerRecord<>(topic, compressed);
+        producer.send(record);
     }
 
     public void close() {
